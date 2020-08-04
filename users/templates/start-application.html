@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static  %}
+
+{% block body_classes %}login-page err-500{% endblock %}
+
+{% block sidebar %}
+{% endblock sidebar %}
+
+{% block content %}
+<div class='loader'>
+    <div class='spinner-grow text-primary' role='status'>
+        <span class='sr-only'>Loading...</span>
+    </div>
+</div>
+<div class="container">
+    <div class="login-container">
+        <div class="row">
+            <div class="col-lg-4 col-md-5 col-sm-9 lfh">
+                <div class="card login-box">
+                    <div class="card-body">
+                        <h1 class="card-title text-center">Start Your Loan Application</h1>
+                        <form id="startApplication">
+                            <div class="text-danger" id="errors">
+                                <ul></ul>
+                            </div>
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="firstName" aria-describedby="firstName" name="firstName" placeholder="First Name">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="lastName" aria-describedby="lastName" name="lastName" placeholder="Last Name">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="address" aria-describedby="address" name="address" placeholder="Address">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="ssn" placeholder="SSN" name="ssn">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="dob" aria-describedby="dob" name="dob" placeholder="Date of Birth (YYYY-MM-DD)">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="number" class="form-control" id="amount" aria-describedby="amount" name="amount" placeholder="Loan Amount">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="number" class="form-control" id="monthly_income" aria-describedby="month_income" name="monthly_income" placeholder="Monthly Income">
+                            </div>
+                            <div class="custom-control custom-checkbox form-group">
+                                <input type="checkbox" class="custom-control-input" id="exampleCheck1">
+                                <label class="custom-control-label" for="exampleCheck1">I Agree that Kevin Jewelers can run a credit check.</label>
+                            </div>
+                            <button class="btn btn-secondary">Cancel</button>
+
+                            <button id="submitButton" type="submit" class="btn btn-primary">Continue</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block footer_scripts %}
+    <script>
+        $('#startApplication').on('submit', function (e) {
+            e.preventDefault();
+            $("#submitButton").attr("disabled", true);
+            $('#errors ul li').remove()
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                url: '{% url 'api-v2:submissions-list' %}',
+                data: JSON.stringify({
+                    'email': '{{ request.user.email }}',
+                    'first_name': $('#firstName').val(),
+                    'last_name': $('#lastName').val(),
+                    'address': $('#address').val(),
+                    'ssn': $('#ssn').val(),
+                    'date_of_birth': $('#dob').val(),
+                    'amount': $('#amount').val(),
+                    'monthly_income': $('#monthly_income').val(),
+                    'credit_check_opt_in': true,
+                }),
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    window.location.href = "/plaid-connect/";
+                },
+                error: function(data){
+                    $("#submitButton").attr("disabled", false);
+                    for (const [key, value] of Object.entries(data.responseJSON)) {
+                        $('#errors ul').append(`<li>${key} : ${value}</li>`)
+}
+                }
+            })
+        })
+    </script>
+{% endblock %}

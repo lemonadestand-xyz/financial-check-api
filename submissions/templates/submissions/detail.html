@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="lime-container">
+        <div class="lime-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="page-title">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb breadcrumb-separator-1">
+                                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                                    <li class="breadcrumb-item active"
+                                        aria-current="page">{{ submission.first_name }} {{ submission.last_name }}</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="invoice-header">
+                                            <h5>Submission Overview</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <div class="invoice-header">
+                                            <h4>
+                                            <a href="#">
+                                                        <span class="badge badge-pill badge-success">
+                                                            Approve
+                                                        </span>
+                                                    </a>
+                                            <a href="#">
+                                                        <span class="badge badge-pill badge-secondary">
+                                                            Decline
+                                                        </span>
+                                                    </a>
+                                                </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-lg-4 m-b-md">
+                                    <h4>
+                                      Status: <span class="badge badge-pill badge-warning">{{ submission.status }}</span>
+                                    </h4>
+                                    <h4>
+                                      Outstanding Debt: <span class="text-danger">$25,458.00</span>
+                                    </h4>
+                                  </div>
+                                  <div class="col-lg-4 m-b-md">
+                                    <h4>
+                                      Credit Requested: <span class="bold">${{ submission.amount }}</span>
+                                    </h4>
+                                    <h4>
+                                      Verified Annual Income: <span class="text-success">${{ income.last_year_income }}</span>
+                                    </h4>
+                                  </div>
+                                  <div class="col-lg-4 m-b-md">
+                                    <h4>
+                                      Credit Score: <span class="badge badge-pill badge-warning">686</span>
+                                    </h4>
+                                    <h4>
+                                      Debt / Income: <span class="text-danger">.55</span>
+                                    </h4>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="row">
+                                            <div class="col-lg m-b-md">
+                                                <p class="bold">Report Information:</p>
+                                                <span><b>Request ID:</b> {{ submission.id }}</span><br>
+                                                <span><b>Request User ID:</b> {{ submission.user.id }}</span><br>
+                                                <span><b>Request Date:</b> {{ submission.created }}</span><br>
+                                                <span><b>Accounts:</b> {{ account_count }}</span><br>
+                                            </div>
+                                            <div class="col-lg m-b-md">
+                                                <p class="bold">Borrower Information:</p>
+                                                <span><b>First Name:</b> {{ submission.first_name }}</span><br>
+                                                <span><b>Last Name:</b> {{ submission.last_name }}</span><br>
+                                                <span><b>Address:</b> {{ submission.address }}</span><br>
+                                                <span><b>SSN:</b> {{ submission.ssn }}</span><br>
+                                                <span><b>Email:</b> {{ submission.email }}</span><br>
+                                                <span><b>Phone:</b> {{ submission.phone }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="invoice-header m-t-xxl">
+                                            <h5>Income Overview</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="row">
+                                            <div class="col-lg m-b-md invoice-info">
+                                                <span><b>Last Year Income:</b> ${{ income.last_year_income }}</span><br>
+                                                <span><b>Last Year Pre-Tax Income:</b> ${{ income.last_year_income_before_tax }}</span><br>
+                                                <span><b># of Income Streams:</b> {{ income.number_of_income_streams }}</span>
+                                            </div>
+                                            <div class="col-lg m-b-md invoice-info">
+                                                <span><b>Projected Yearly Income:</b> ${{ income.projected_yearly_income }}</span><br>
+                                                <span><b>Projected Yearly Pre-tax Income:</b> ${{ income.projected_yearly_income_before_tax }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                    <div class="table-responsive ">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Monthly Income</th>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Mask</th>
+                                                <th scope="col" class="text-right">Confidence</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for stream in income.income_streams %}
+                                                <tr>
+                                                    <td>${{ stream.monthly_income }}</td>
+                                                    <td>{{ stream.name }}</td>
+                                                    <td>{{ stream.days }}</td>
+                                                    <td class="text-right">{{ stream.confidence }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="invoice-header m-t-xxl">
+                                            <h5>Account Overview</h5>
+                                        </div>
+                                        <div class="table-responsive ">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">Institution</th>
+                                                    <th scope="col">Account</th>
+                                                    <th scope="col">Mask</th>
+                                                    <th scope="col" class="text-right">Current Balance</th>
+                                                    <th scope="col" class="text-right">Account Limit</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for account in liabilities.accounts %}
+                                                    <tr>
+                                                        <td>{{ account.name }}</td>
+                                                        <td>{{ account.official_name }}</td>
+                                                        <td>{{ account.mask }}</td>
+                                                        <td class="text-right">{{ account.balances.available }}</td>
+                                                        <td class="text-right">{{ account.balances.limit }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="invoice-header m-t-xxl">
+                                            <h5>Liabilities</h5>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">Overdue</th>
+                                                    <th scope="col">Last Payment</th>
+                                                    <th scope="col">Statement Balance</th>
+                                                    <th scope="col" class="text-right">Minimum Payment</th>
+                                                    <th scope="col" class="text-right">Account Limit</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for credit_liability in liabilities.liabilities.credit %}
+                                                    <tr>
+                                                        <td>{{ credit_liability.is_overdue }}</td>
+                                                        <td><b>${{ credit_liability.last_payment_amount }}</b>
+                                                            on {{ credit_liability.last_payment_date }}</td>
+                                                        <td>
+                                                            <b>${{ credit_liability.last_statement_balance }}</b>, {{ credit_liability.last_statement_issue_date }}
+                                                        </td>
+                                                        <td class="text-right">
+                                                            <b>{{ credit_liability.minimum_payment_amount }}</b></td>
+                                                        <td class="text-right">{{ credit_liability.balances.next_payment_due_date }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-right"></td>
+                                                        <td><b>APR Percentage</b></td>
+                                                        <td><b>Type</b></td>
+                                                        <td><b>Balance Subject to APR</b></td>
+                                                        <td class="text-right"><b>Interest</b></td>
+
+                                                    </tr>
+                                                    {% for apr in credit_liability.aprs %}
+                                                        <tr>
+                                                            <td class="text-right"></td>
+                                                            <td>%{{ apr.apr_percentage }}</td>
+                                                            <td>{{ apr.apr_type }}</td>
+                                                            <td>{{ apr.balance_subject_to_apr }}</td>
+                                                            <td class="text-right">{{ apr.interest_charge_amount }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="invoice-header m-t-xxl">
+                                            <h5>Mortgages</h5>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">Account #</th>
+                                                    <th scope="col">Escrow Balance</th>
+                                                    <th scope="col">Interest</th>
+                                                    <th scope="col" class="text-right">Loan Term</th>
+                                                    <th scope="col" class="text-right">Past Due</th>
+                                                    <th scope="col" class="text-right">Next Payment</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for mortgage in liabilities.liabilities.mortgage %}
+                                                    <tr>
+                                                        <td>{{ mortgage.account_number }}</td>
+                                                        <td><b>${{ mortgage.escrow_balance }}</b></td>
+                                                        <td>
+                                                            <b>${{ mortgage.interest_rate.percentage }}</b>, {{ mortgage.interest_rate.type }}
+                                                        </td>
+                                                        <td class="text-right"><b>{{ mortgage.loan_term }}</b></td>
+                                                        <td class="text-right">${{ mortgage.past_due_amount }}</td>
+                                                        <td class="text-right">
+                                                            <b>${{ mortgage.next_monthly_payment }}</b>, {{ mortgage.next_payment_due_date }}
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="lime-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="footer-text">2019 © stacks</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_classes %}login-page err-500{% endblock %}
+
+{% block sidebar %}
+{% endblock sidebar %}
+
+
+{% block content %}
+    <div class='loader'>
+        <div class='spinner-grow text-primary' role='status'>
+            <span class='sr-only'>Loading...</span>
+        </div>
+    </div>
+    <div class="container">
+        <div class="login-container">
+            <div class="row">
+                <div class="col-lg-4 col-md-5 col-sm-9 lfh">
+                    <div class="card login-box">
+                        <div class="card-body">
+                            <img class="m-b-lg" src="{% static 'images/logo.png' %}"/>
+
+                            <h5 class="card-title text-center">Get Started</h5>
+                            <div class="text-danger" id="errors">
+                                <ul></ul>
+                            </div>
+                            <form id="registrationForm">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input name="email" type="email" class="form-control" id="exampleInputEmail1"
+                                           aria-describedby="emailHelp" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <input name="password" type="password" class="form-control"
+                                           id="exampleInputPassword1"
+                                           placeholder="Password">
+                                </div>
+                                <div class="custom-control custom-checkbox form-group">
+                                    <input type="checkbox" class="custom-control-input" id="exampleCheck1">
+                                    <label class="custom-control-label" for="exampleCheck1">I Agree with <a href="#">Terms
+                                        &amp; Policies</a></label>
+                                </div>
+
+                                <button class="btn btn-secondary">Cancel</button>
+                                <button id="submitButton" type="submit" class="btn btn-primary">Sign Up</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block footer_scripts %}
+    <script>
+        $('#registrationForm').on('submit', function (e) {
+            e.preventDefault();
+            $("#submitButton").attr("disabled", true);
+            $('#errors ul li').remove()
+
+            $.ajax({
+                type: 'post',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                url: {% url 'register_and_login' %},
+                data: JSON.stringify({
+                    'email': $('#exampleInputEmail1').val(),
+                    'password': $('#exampleInputPassword1').val()
+                }),
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    window.location.href = "/start-application";
+                },
+                error: function(data){
+                    $("#submitButton").attr("disabled", false);
+                    for (const [key, value] of Object.entries(data.responseJSON)) {
+                        $('#errors ul').append(`<li>${key} : ${value}</li>`)
+}
+                }
+            })
+        })
+    </script>
+{% endblock %}

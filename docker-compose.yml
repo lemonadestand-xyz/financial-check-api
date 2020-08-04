@@ -1,0 +1,94 @@
+version: '3'
+
+services:
+  rabbitmq:
+    container_name: plaid_rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:3.8.2-management
+    env_file:
+      - ./.env
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # here, we can access rabbitmq management plugin
+    restart: on-failure
+
+  web: &web
+    build:
+      context: ./.
+      dockerfile: Dockerfile
+    container_name: plaid_django
+    command: gunicorn plaid_rest_celery.wsgi:application --bind 0.0.0.0:8000
+    image: plaid_rest_image
+    volumes:
+      - static_volume:/home/plaid/web/static
+    expose:
+      - "8000"
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+    restart: on-failure
+
+  db:
+    image: postgres:12-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/home/plaid/web/static
+    ports:
+      - "7777:80"
+    depends_on:
+      - web
+    restart: on-failure
+
+  celery_flash_worker:
+    <<: *web
+    command: celery -A plaid_rest_celery worker -Q flash -c 2 --loglevel=info
+    container_name: plaid_flash_worker
+    image: plaid_rest_image
+    depends_on:
+      - web
+      - rabbitmq
+    restart: always
+
+  celery_default_worker:
+    <<: *web
+    command: celery -A plaid_rest_celery worker -Q default -c 2 --loglevel=info
+    container_name: plaid_default_worker
+    image: plaid_rest_image
+    depends_on:
+      - web
+      - rabbitmq
+    restart: always
+
+  celery_slow_worker:
+    <<: *web
+    command: celery -A plaid_rest_celery worker -Q slow -c 4 --loglevel=info
+    container_name: plaid_slow_worker
+    image: plaid_rest_image
+    depends_on:
+      - web
+      - rabbitmq
+    restart: always
+
+  flower:
+    image: mher/flower
+    #    environment:
+    #      - CELERY_BROKER_URL=
+    #      - FLOWER_PORT=8888
+    env_file:
+      - ./.env
+    ports:
+      - 7775:8888
+    depends_on:
+      - web
+      - rabbitmq
+
+volumes:
+  postgres_data:
+  static_volume:

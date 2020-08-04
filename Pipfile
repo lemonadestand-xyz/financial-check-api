@@ -1,0 +1,25 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+django = "==2.*"
+djangorestframework = "*"
+markdown = "*"
+django-filter = "*"
+djoser = "*"
+drf-yasg = "*"
+celery = "*"
+gunicorn = "*"
+django-celery-results = "*"
+plaid-python = "*"
+django-extensions = "*"
+django-structlog = "*"
+sentry-sdk = "*"
+psycopg2 = "*"
+
+[requires]
+python_version = "3.7.7"

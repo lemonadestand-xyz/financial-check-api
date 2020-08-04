@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="lime-container">
+        <div class="lime-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card bg-info text-white">
+                            <div class="card-body">
+                                <div class="dashboard-info row">
+                                    <div class="info-text col-md-6">
+                                        <h5 class="card-title">Welcome back {{ request.user.first_name }}!</h5>
+                                        <p>Get familiar with dashboard, here are some ways to get started.</p>
+                                        <ul>
+                                            <li>Review Submissions</li>
+                                            <li>Approve / Deny Submissions</li>
+                                        </ul>
+                                        <h4>
+                                            {{ awaiting_review_count }} Applications Awaiting Review
+                                        </h4>
+                                    </div>
+                                    <div class="info-image col-md-6"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="">
+                                    <div class="">
+                                        <h5 class="card-title">Daily Applications</h5>
+                                        <canvas id="visitorsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Recent Submissions</h5>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Amount</th>
+                                            <th scope="col">Address</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for submission in submissions %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'submission-detail'  submission.id %}">
+                                                        {{ submission.first_name }} {{ submission.last_name }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ submission.user.email }}</td>
+                                                <td>{{ submission.amount }}</td>
+                                                <td>{{ submission.address }}</td>
+                                                <td><span class="badge badge-warning">{{ submission.status }}</span>
+                                                </td>
+                                                <td>{{ submission.created }}</td>
+                                                <td>
+                                                    <a href="{% url 'submission-detail'  submission.id %}">
+                                                        <span class="badge badge-pill badge-secondary">
+                                                            Review Now
+                                                        </span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">New Borrowers Approved Last 7 Days</h5>
+                                <h2 class="text-center">45.6K</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Credit Approved Last 7 Days</h5>
+                                <h2 class="text-center">0.5 M</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Credit Outstanding</h5>
+                                <h2 class="text-center">9.3 M</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-warning m-b-lg" role="alert">
+                            Data has been updated 23 min ago.
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Outstanding Credit Summary:</h5>
+                                <div class="popular-products">
+                                    <div class="popular-product-list">
+                                        <ul class="list-unstyled">
+                                            <li id="popular-product1">
+                                                <span>Outstanding Credit</span>
+                                                <span class="badge badge-pill badge-success">$9.3M</span>
+                                            </li>
+                                            <li id="popular-product2">
+                                                <span>Total Delinquent</span>
+                                                <span class="badge badge-pill badge-warning">$0.9M</span>
+                                            </li>
+                                            <li id="popular-product3">
+                                                <span>Delinquent (31 - 60 days)</span>
+                                                <span class="badge badge-pill badge-secondary">$0.5M</span>
+                                            </li>
+                                            <li id="popular-product3">
+                                                <span>Delinquent (61 - 90 days)</span>
+                                                <span class="badge badge-pill badge-secondary">$0.4M</span>
+                                            </li>
+                                            <li id="popular-product3">
+                                                <span>Delinquent (90+ Days)</span>
+                                                <span class="badge badge-pill badge-secondary">$0.1M</span>
+                                            </li>
+                                        </ul>
+                                        <div class="alert alert-info" role="alert">
+                                            Based on last 6 Month's applications.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Monthly Credit Balances</h5>
+                                <div id="apex1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="lime-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="footer-text">2020 © Kevin Jewelers</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
