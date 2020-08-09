@@ -66,6 +66,15 @@ def plaid_connect(request):
     return render(request, 'plaid-connect.html', context)
 
 
+def success(request):
+    user = request.user
+    existing_submission = None
+    if user:
+        existing_submission = Submission.objects.filter(user=user).first()
+    context = {'existing_submission': existing_submission}
+    return render(request, 'success.html', context)
+
+
 # def login(request):
 #     context = {}
 #     return render(request, 'login.html', context)

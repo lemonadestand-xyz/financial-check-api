@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block content %}
     <div class="lime-container">
@@ -47,7 +48,7 @@
                                 <div class="row">
                                   <div class="col-lg-4 m-b-md">
                                     <h4>
-                                      Status: <span class="badge badge-pill badge-warning">{{ submission.status }}</span>
+                                      Status: <span class="badge badge-pill badge-warning">{{ submission.status|title }}</span>
                                     </h4>
                                     <h4>
                                       Outstanding Debt: <span class="text-danger">$25,458.00</span>
@@ -55,10 +56,10 @@
                                   </div>
                                   <div class="col-lg-4 m-b-md">
                                     <h4>
-                                      Credit Requested: <span class="bold">${{ submission.amount }}</span>
+                                      Credit Requested: <span class="bold">${{ submission.amount|intcomma }}</span>
                                     </h4>
                                     <h4>
-                                      Verified Annual Income: <span class="text-success">${{ income.last_year_income }}</span>
+                                      Verified Annual Income: <span class="text-success">${{ income.last_year_income|intcomma }}</span>
                                     </h4>
                                   </div>
                                   <div class="col-lg-4 m-b-md">
@@ -66,7 +67,7 @@
                                       Credit Score: <span class="badge badge-pill badge-warning">686</span>
                                     </h4>
                                     <h4>
-                                      Debt / Income: <span class="text-danger">.55</span>
+                                      Debt / Income: <span class="text-danger">0.55</span>
                                     </h4>
                                   </div>
                                 </div>
@@ -103,13 +104,13 @@
                                     <div class="col-lg-8">
                                         <div class="row">
                                             <div class="col-lg m-b-md invoice-info">
-                                                <span><b>Last Year Income:</b> ${{ income.last_year_income }}</span><br>
-                                                <span><b>Last Year Pre-Tax Income:</b> ${{ income.last_year_income_before_tax }}</span><br>
+                                                <span><b>Last Year Income:</b> ${{ income.last_year_income|intcomma }}</span><br>
+                                                <span><b>Last Year Pre-Tax Income:</b> ${{ income.last_year_income_before_tax|intcomma }}</span><br>
                                                 <span><b># of Income Streams:</b> {{ income.number_of_income_streams }}</span>
                                             </div>
                                             <div class="col-lg m-b-md invoice-info">
-                                                <span><b>Projected Yearly Income:</b> ${{ income.projected_yearly_income }}</span><br>
-                                                <span><b>Projected Yearly Pre-tax Income:</b> ${{ income.projected_yearly_income_before_tax }}</span>
+                                                <span><b>Projected Yearly Income:</b> ${{ income.projected_yearly_income|intcomma }}</span><br>
+                                                <span><b>Projected Yearly Pre-tax Income:</b> ${{ income.projected_yearly_income_before_tax|intcomma }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -127,7 +128,7 @@
                                             <tbody>
                                             {% for stream in income.income_streams %}
                                                 <tr>
-                                                    <td>${{ stream.monthly_income }}</td>
+                                                    <td>${{ stream.monthly_income|intcomma }}</td>
                                                     <td>{{ stream.name }}</td>
                                                     <td>{{ stream.days }}</td>
                                                     <td class="text-right">{{ stream.confidence }}</td>
@@ -160,7 +161,7 @@
                                                         <td>{{ account.name }}</td>
                                                         <td>{{ account.official_name }}</td>
                                                         <td>{{ account.mask }}</td>
-                                                        <td class="text-right">{{ account.balances.available }}</td>
+                                                        <td class="text-right">{{ account.balances.available|intcomma }}</td>
                                                         <td class="text-right">{{ account.balances.limit }}</td>
                                                     </tr>
                                                 {% endfor %}
@@ -189,10 +190,10 @@
                                                 {% for credit_liability in liabilities.liabilities.credit %}
                                                     <tr>
                                                         <td>{{ credit_liability.is_overdue }}</td>
-                                                        <td><b>${{ credit_liability.last_payment_amount }}</b>
+                                                        <td><b>${{ credit_liability.last_payment_amount|intcomma }}</b>
                                                             on {{ credit_liability.last_payment_date }}</td>
                                                         <td>
-                                                            <b>${{ credit_liability.last_statement_balance }}</b>, {{ credit_liability.last_statement_issue_date }}
+                                                            <b>${{ credit_liability.last_statement_balance|intcomma }}</b>, {{ credit_liability.last_statement_issue_date }}
                                                         </td>
                                                         <td class="text-right">
                                                             <b>{{ credit_liability.minimum_payment_amount }}</b></td>
@@ -242,14 +243,14 @@
                                                 {% for mortgage in liabilities.liabilities.mortgage %}
                                                     <tr>
                                                         <td>{{ mortgage.account_number }}</td>
-                                                        <td><b>${{ mortgage.escrow_balance }}</b></td>
+                                                        <td><b>${{ mortgage.escrow_balance|intcomma }}</b></td>
                                                         <td>
                                                             <b>${{ mortgage.interest_rate.percentage }}</b>, {{ mortgage.interest_rate.type }}
                                                         </td>
                                                         <td class="text-right"><b>{{ mortgage.loan_term }}</b></td>
                                                         <td class="text-right">${{ mortgage.past_due_amount }}</td>
                                                         <td class="text-right">
-                                                            <b>${{ mortgage.next_monthly_payment }}</b>, {{ mortgage.next_payment_due_date }}
+                                                            <b>${{ mortgage.next_monthly_payment|intcomma }}</b>, {{ mortgage.next_payment_due_date }}
                                                         </td>
                                                     </tr>
                                                 {% endfor %}

@@ -15,7 +15,7 @@ $(document).ready(function() {
             }, {
                 label: 'Declined',
                 data: [2, 4, 2, 4, 2, 4, 2, 4, 2, 4, 2],
-                backgroundColor: '#F4F4F5'
+                backgroundColor: '#b1b1b1'
             }]
         },
         options: {
@@ -65,7 +65,7 @@ $(document).ready(function() {
                 },
             },
         
-        colors:['#FFCD36', '#5780F7', '#06BA54'],
+        colors:['#5780F7', '#f83a3a', '#ffcd36'],
 
             dataLabels: {
                 enabled: false
@@ -76,14 +76,15 @@ $(document).ready(function() {
                 colors: ['transparent']
             },
             series: [{
+
                 name: 'Outstanding Credit ($M)',
-                data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 63, 60]
-            }, {
-                name: 'Total Payments ($M)',
-                data: [76, 85, 101, 98, 87, 105, 91, 114, 94, 89, 95]
+                data: [76, 85, 100, 98, 87, 105, 91, 114, 94, 89, 95]
             }, {
                 name: 'Total Delinquent ($M)',
-                data: [35, 41, 36, 26, 45, 48, 52, 53, 41, 39, 46]
+                data: [44, 44, 64, 72, 42, 60, 39, 60, 53, 50, 60]
+            }, {
+                name: 'Total Payment ($M)',
+                data: [32, 41, 36, 26, 45, 45, 52, 54, 41, 39, 35]
             }],
             xaxis: {
                 categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_classes %}login-page err-500{% endblock %}
+
+{% block sidebar %}
+{% endblock sidebar %}
+
+{% block header %}
+{% endblock header %}
+
+{% block content %}
+    {% csrf_token %}
+    <div class='loader'>
+        <div class='spinner-grow text-primary' role='status'>
+            <span class='sr-only'>Loading...</span>
+        </div>
+    </div>
+    <div class="container">
+        <div class="login-container">
+            <div class="row">
+                <div class="col-lg-4 col-md-5 col-sm-9 lfh">
+                    <div class="card login-box">
+                        <div class="card-body text-center">
+                            <img class="m-b-lg" src="{% static 'images/logo.png' %}"/>
+                            <h5 class="card-title text-center">Successful submission</h5>
+
+                            <div id="successMessage" class="alert alert-success m-b-lg" role="alert">
+                                Your application was successfully submitted.  We will review your application over the next week and contact you by email for next steps.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
