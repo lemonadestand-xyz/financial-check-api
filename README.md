@@ -182,3 +182,13 @@ curl -X GET -H "Authorization: Token dddad1111Example_token8218132251b" http://l
 ```
 curl -X POST -H "Authorization: Token dddad1111Example_token8218132251b" http://localhost:7777/api/v1/auth/token/logout/
 ```
+
+
+## Deployment
+```
+gcloud builds submit --tag gcr.io/fund-a-friend/switchboard-demo:latest --project=fund-a-friend
+
+gcloud beta run deploy switchboard --image gcr.io/fund-a-friend/switchboard-demo:latest --platform managed --project=fund-a-friend
+
+(region is us-central 1)
+```
