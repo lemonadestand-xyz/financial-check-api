@@ -65,7 +65,7 @@ $(document).ready(function() {
                 },
             },
         
-        colors:['#5780F7', '#f83a3a', '#ffcd36'],
+        colors:['#5780F7', '#ffcd36', '#f83a3a'],
 
             dataLabels: {
                 enabled: false
@@ -80,10 +80,10 @@ $(document).ready(function() {
                 name: 'Outstanding Credit ($M)',
                 data: [76, 85, 100, 98, 87, 105, 91, 114, 94, 89, 95]
             }, {
-                name: 'Total Delinquent ($M)',
+                name: 'Total Payment ($M)',
                 data: [44, 44, 64, 72, 42, 60, 39, 60, 53, 50, 60]
             }, {
-                name: 'Total Payment ($M)',
+                name: 'Total Delinquent ($M)',
                 data: [32, 41, 36, 26, 45, 45, 52, 54, 41, 39, 35]
             }],
             xaxis: {
